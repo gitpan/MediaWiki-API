@@ -40,11 +40,11 @@ MediaWiki::API - Provides a Perl interface to the MediaWiki API (http://www.medi
 
 =head1 VERSION
 
-Version 0.32
+Version 0.33
 
 =cut
 
-our $VERSION  = "0.32";
+our $VERSION  = "0.33";
 
 =head1 SYNOPSIS
 
@@ -706,8 +706,8 @@ sub download {
   # get the page id and the page hashref with title and revisions
   my ( $pageid, $pageref ) = each %{ $ref->{query}->{pages} };
 
-  # if the page is missing then return an empty string
-  return '' if ( defined $pageref->{missing} );
+  # if the image is missing then return an empty string
+  return '' unless ( defined $pageref->{imageinfo} );
 
   my $url = @{ $pageref->{imageinfo} }[0]->{url};
 
