@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               MediaWiki-API
-version:            0.35
+version:            0.36
 abstract:           Provides a Perl interface to the MediaWiki API (http://www.mediawiki.org/wiki/API)
 author:
     - Jools Wills <buzz@exotica.org.uk>
