@@ -42,11 +42,11 @@ MediaWiki::API - Provides a Perl interface to the MediaWiki API (http://www.medi
 
 =head1 VERSION
 
-Version 0.37
+Version 0.38
 
 =cut
 
-our $VERSION  = "0.37";
+our $VERSION  = "0.38";
 
 =head1 SYNOPSIS
 
@@ -102,7 +102,9 @@ Configuration options are
 
 =item * on_error = Function reference to call if an error occurs in the module.
 
-=item * use_http_get = Boolean 0 or 1 (defaults to 0). If set to 1, the perl module will use http GET method for accessing the api. By default it uses the POST method. Note that the module will still use POST for the api calls that require POST no matter what the value of this configuration option. Currently the following actions will work with GET: query, logout, purge, paraminfo.
+=item * use_http_get = Boolean 0 or 1 (defaults to 0). If set to 1, the perl module will use http GET method for accessing the api. By default it uses the POST method. Note that the module will still use POST for the api calls that require POST no matter what the value of this configuration option. Currently the following actions will work with GET: query, logout, purge, paraminfo - see get_actions configuration below.
+
+=item * get_actions = Hashref (defaults to { 'query' => 1, 'logout' => 1, purge' => 1, 'paraminfo' => 1 } ). This contains the API actions that are supported by the http GET method if it is enabled. Some wikis may have extensions that add more functions that work with an http GET request. If so, you can add actions as needed.
 
 =item * retries = Integer value; The number of retries to send an API request if an http error or JSON decoding error occurs. Defaults to 0 (try only once - don't retry). If max_retries is set to 4, and the wiki is down, the error won't be reported until after the 5th connection attempt. 
 
@@ -211,6 +213,13 @@ sub _get_config_defaults {
   $config{max_lag_delay} = DEF_MAX_LAG_DELAY;
   
   $config{use_http_get} = USE_HTTP_GET;
+  
+  $config{get_actions} = {
+    'query' => 1,
+    'logout' => 1,
+    'purge' => 1,
+    'paraminfo' => 1
+  };
 
   return \%config;
 }
@@ -330,15 +339,8 @@ You can also give the data to be uploaded directly, should you want to read the 
 sub api {
   my ($self, $query, $options) = @_;
 
-  return $self->_error(ERR_CONFIG,"You need to give the URL to the mediawiki API php.")
+  return $self->_error(ERR_CONFIG, "You need to give the URL to the mediawiki API php.")
     unless $self->{config}->{api_url};
-
-  my $get_actions = {
-    'query' => 1,
-    'logout' => 1,
-    'purge' => 1,
-    'paraminfo' => 1
-  };
 
   my $retries = $self->{config}->{retries};
   my $maxlagretries = $self->{config}->{max_lag_retries};
@@ -350,7 +352,7 @@ sub api {
   # if the config is set to use GET we need to contruct a querystring. some actions are "POST" only -
   # edit, move, action = rollback, action = undelete, action = 
   my $querystring = '';
-  if ( $self->{config}->{use_http_get} && defined $get_actions->{$query->{action}} ){
+  if ( $self->{config}->{use_http_get} && $self->{config}->{get_actions}->{$query->{action}} ) {
     $querystring = _make_querystring( $query );
   }
 
@@ -1000,7 +1002,7 @@ L<http://search.cpan.org/dist/MediaWiki-API>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 - 2011 Jools Wills, all rights reserved.
+Copyright 2008 - 2012 Jools Wills, all rights reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

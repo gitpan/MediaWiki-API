@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               MediaWiki-API
-version:            0.37
+version:            0.38
 abstract:           Provides a Perl interface to the MediaWiki API (http://www.mediawiki.org/wiki/API)
 author:
     - Jools Wills <buzz@exotica.org.uk>
@@ -15,12 +15,12 @@ requires:
     Encode:          0
     JSON:            0
     LWP::UserAgent:  0
-    Test::More:      0
+    Test::More:      0.98
 no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.55_02
+generated_by:       ExtUtils::MakeMaker version 6.57_05
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
