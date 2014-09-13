@@ -9,4 +9,5 @@ t/10-api.t
 t/98-pod-coverage.t
 t/99-pod.t
 t/testimage.png
-META.yml                                 Module meta-data (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)
